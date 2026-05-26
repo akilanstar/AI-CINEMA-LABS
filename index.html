@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cinema Portfolio | High-Fidelity Showcases</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Exclusive showcase of cinematic quality AI generated videos and music, protected from unauthorized downloads.">
+    <meta name="keywords" content="Generative AI, Cinema Quality Video, AI Songs, Portfolio, Anti-download Player, Secure Streaming">
+    <meta name="author" content="AI Cinema Labs">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (via CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Glow Elements -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-accent">AI</span> CINEMA LABS
+        </div>
+        <nav class="nav">
+            <a href="#showcase" class="nav-link">Showcase</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+        <div class="drive-badge">
+            <a href="https://drive.google.com/drive/folders/1xPiV6OjAQpBTmwmuGUj_Oz42pHvOiQ-C?usp=sharing" target="_blank" class="btn btn-secondary">
+                <i data-lucide="hard-drive"></i> Drive Folder
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="hero-subtitle">Generative AI Cinema & Music</span>
+                <h1 class="hero-title">Cinematic <span class="text-glow">AI Artistry</span></h1>
+                <p class="hero-description">
+                    A curated showcase of high-fidelity, cinema-quality AI generated videos and original soundtracks. Streamed securely on our custom-built, anti-download media player.
+                </p>
+                <div class="hero-actions">
+                    <a href="#showcase" class="btn btn-primary">
+                        <i data-lucide="play"></i> Watch Now
+                    </a>
+                    <a href="#features" class="btn btn-outline">
+                        Learn More <i data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Showcase & Custom Player Section -->
+        <section id="showcase" class="showcase-section">
+            <div class="section-header">
+                <h2 class="section-title">Exclusive Showcases</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="showcase-grid">
+                <!-- Main Player Column -->
+                <div class="player-container">
+                    <div class="custom-video-player" id="videoPlayerContainer">
+                        <!-- Video Element (Using direct bypass link) -->
+                        <video id="mainVideo" preload="metadata">
+                            <source src="https://drive.usercontent.google.com/download?id=10xtVZftIS17rxdaWraNpXE2gtpEW08vc&export=download&confirm=t" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        
+                        <!-- Anti-Download Invisible Overlay -->
+                        <div class="video-overlay" id="videoOverlay">
+                            <div class="overlay-lock-msg">
+                                <i data-lucide="shield-alert"></i>
+                                <span>Protected Media - Downloading is Disabled</span>
+                            </div>
+                        </div>
+
+                        <!-- Big Play/Pause Center Button -->
+                        <button class="center-play-btn" id="centerPlayBtn">
+                            <i data-lucide="play"></i>
+                        </button>
+
+                        <!-- Custom Controls -->
+                        <div class="player-controls">
+                            <!-- Progress Bar -->
+                            <div class="progress-container" id="progressContainer">
+                                <div class="progress-bar" id="progressBar"></div>
+                                <div class="progress-hover-bar"></div>
+                            </div>
+                            
+                            <div class="controls-row">
+                                <div class="controls-left">
+                                    <button class="control-btn" id="playPauseBtn" title="Play/Pause (Space)">
+                                        <i data-lucide="play"></i>
+                                    </button>
+                                    <button class="control-btn" id="stopBtn" title="Stop">
+                                        <i data-lucide="square"></i>
+                                    </button>
+                                    <div class="time-display">
+                                        <span id="currentTime">00:00</span> / <span id="totalDuration">00:00</span>
+                                    </div>
+                                </div>
+                                <div class="controls-right">
+                                    <!-- Volume Slider -->
+                                    <div class="volume-container">
+                                        <button class="control-btn" id="muteBtn" title="Mute">
+                                            <i data-lucide="volume-2"></i>
+                                        </button>
+                                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="1">
+                                    </div>
+                                    <!-- Speed Selector -->
+                                    <div class="speed-selector-container">
+                                        <button class="control-btn" id="speedBtn" title="Playback Speed">
+                                            1.0x
+                                        </button>
+                                        <div class="speed-options" id="speedOptions">
+                                            <div class="speed-opt" data-speed="0.5">0.5x</div>
+                                            <div class="speed-opt" data-speed="0.75">0.75x</div>
+                                            <div class="speed-opt active" data-speed="1">1.0x</div>
+                                            <div class="speed-opt" data-speed="1.25">1.25x</div>
+                                            <div class="speed-opt" data-speed="1.5">1.5x</div>
+                                            <div class="speed-opt" data-speed="2">2.0x</div>
+                                        </div>
+                                    </div>
+                                    <button class="control-btn" id="fullscreenBtn" title="Fullscreen (F)">
+                                        <i data-lucide="maximize"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="current-video-details">
+                        <h3 id="currentVideoTitle" class="video-title-text">01-I Adore You Official Song.mp4</h3>
+                        <p class="video-desc-text">Securely streamed using custom media player.</p>
+                    </div>
+                </div>
+
+                <!-- Playlist Column -->
+                <div class="playlist-container">
+                    <h3 class="playlist-header">Work Samples (<span id="playlistCount">4</span>)</h3>
+                    <div class="playlist-items" id="playlistItems">
+                        <!-- Items populated dynamically -->
+                        <div class="playlist-item active" data-id="10xtVZftIS17rxdaWraNpXE2gtpEW08vc" data-name="01-I Adore You Official Song.mp4">
+                            <div class="playlist-item-thumbnail">
+                                <i data-lucide="clapperboard"></i>
+                            </div>
+                            <div class="playlist-item-info">
+                                <span class="item-title">01-I Adore You Official Song.mp4</span>
+                                <span class="item-duration">AI Song & Visuals</span>
+                            </div>
+                            <div class="playing-indicator">
+                                <i data-lucide="music"></i>
+                            </div>
+                        </div>
+
+                        <div class="playlist-item" data-id="1G3AlwbrMYLGrrhbncNfnGju0RMZbHTI0" data-name="01-Rolex Watch Advertisement.mp4">
+                            <div class="playlist-item-thumbnail">
+                                <i data-lucide="clapperboard"></i>
+                            </div>
+                            <div class="playlist-item-info">
+                                <span class="item-title">01-Rolex Watch Advertisement.mp4</span>
+                                <span class="item-duration">AI Advertisement</span>
+                            </div>
+                            <div class="playing-indicator">
+                                <i data-lucide="music"></i>
+                            </div>
+                        </div>
+
+                        <div class="playlist-item" data-id="1XC0iHYCTTr2g_3ltHA3OjOUz9GU_eX9W" data-name="07-Heatwave.mp4">
+                            <div class="playlist-item-thumbnail">
+                                <i data-lucide="clapperboard"></i>
+                            </div>
+                            <div class="playlist-item-info">
+                                <span class="item-title">07-Heatwave.mp4</span>
+                                <span class="item-duration">AI Video Showcase</span>
+                            </div>
+                            <div class="playing-indicator">
+                                <i data-lucide="music"></i>
+                            </div>
+                        </div>
+
+                        <div class="playlist-item" data-id="11D7i7oKexWVdOFh0lvr6ttfz5F5W8Ewt" data-name="07-Stay tonight-AI-Song-4k_v01 1.mp4">
+                            <div class="playlist-item-thumbnail">
+                                <i data-lucide="clapperboard"></i>
+                            </div>
+                            <div class="playlist-item-info">
+                                <span class="item-title">07-Stay tonight-AI-Song-4k_v01 1.mp4</span>
+                                <span class="item-duration">AI Song 4K</span>
+                            </div>
+                            <div class="playing-indicator">
+                                <i data-lucide="music"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features & Security Info Section -->
+        <section id="features" class="features-section">
+            <div class="section-header">
+                <h2 class="section-title">Security & Technology Features</h2>
+                <div class="divider"></div>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                    <h3 class="feature-title">Anti-Download System</h3>
+                    <p class="feature-text">
+                        Prevents unauthorized downloading by blocking context menus, keyboard shortcuts (F12, Ctrl+U, Ctrl+S), and dragging gestures, keeping your creative content secure.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="zap"></i>
+                    </div>
+                    <h3 class="feature-title">Cinema Quality Playback</h3>
+                    <p class="feature-text">
+                        Optimized stream integration ensures fluid video playback without lag, presenting your high-fidelity generative AI projects in true full quality.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="layers"></i>
+                    </div>
+                    <h3 class="feature-title">Custom Theater UI</h3>
+                    <p class="feature-text">
+                        A beautiful neon dark theme with glassmorphism overlays and personalized media control buttons, giving visitors an immersive movie-theater experience.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="section-header">
+                <h2 class="section-title">Inquiries & Collaborations</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="contact-container">
+                <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent successfully! (Demo)');">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required placeholder="Enter your email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" rows="5" required placeholder="How can we collaborate?"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Send Message <i data-lucide="send"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-bottom">
+        <p>&copy; 2026 AI Cinema Labs. All rights reserved.</p>
+        <p class="footer-note">Built with Antigravity AI pair programming.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
