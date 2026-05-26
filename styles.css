@@ -886,3 +886,16 @@ body {
         padding: 25px;
     }
 }
+
+/* Invisible overlay shield for Google Drive iframe top controls */
+.iframe-shield-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 56px;
+    z-index: 10;
+    background: transparent;
+    cursor: default;
+}
+
