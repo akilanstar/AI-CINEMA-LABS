@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons (via CDN) -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
     <!-- Background Glow Elements -->
@@ -72,125 +72,22 @@
                 <div class="player-container">
                     <!-- Hybrid Video Player Container -->
                     <div class="custom-video-player" id="videoPlayerContainer">
+                        <!-- Google Drive Preview Player Iframe (Bypasses CORP restrictions on all modern desktop and mobile browsers) -->
+                        <iframe id="mainVideoIframe" src="https://drive.google.com/file/d/10xtVZftIS17rxdaWraNpXE2gtpEW08vc/preview" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         
-                        <!-- Video Player Loader / Spinner -->
-                        <div class="player-loader" id="playerLoader">
-                            <div class="spinner"></div>
-                            <span class="loader-text">Loading High-Fidelity Stream...</span>
-                        </div>
+                        <!-- Top-Right Shield (Blocks Pop-out & Download buttons precisely while keeping the rest of the screen touch-friendly) -->
+                        <div class="iframe-shield-top-right" id="iframeShieldTopRight"></div>
 
-                        <!-- Touch Seek Overlay Feedback -->
-                        <div class="touch-seek-feedback seek-left" id="seekLeftFeedback">
-                            <i data-lucide="chevrons-left"></i>
-                            <span>-10s</span>
-                        </div>
-                        <div class="touch-seek-feedback seek-right" id="seekRightFeedback">
-                            <i data-lucide="chevrons-right"></i>
-                            <span>+10s</span>
-                        </div>
-
-                        <!-- Player Error Overlay (Visible only when stream fails) -->
-                        <div class="player-error-overlay" id="playerErrorOverlay" style="display: none;">
-                            <i data-lucide="alert-triangle"></i>
-                            <span class="error-msg-text">Failed to load high-quality stream.</span>
-                            <button class="btn btn-outline" id="errorFallbackBtn" style="padding: 8px 20px; font-size: 0.8rem; margin-top: 10px; border-color: var(--accent-cyan); color: var(--accent-cyan); font-family: var(--font-heading); width: auto; height: auto;">
-                                <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Switch to Backup Player
-                            </button>
-                        </div>
-
-                        <!-- 1. HTML5 Custom Player (Direct 4K Stream with Cinema Filters - Default on all devices) -->
-                        <video id="mainVideo" class="cinema-4k-filter" playsinline webkit-playsinline preload="metadata" referrerpolicy="no-referrer">
-                            <source src="https://drive.usercontent.google.com/download?id=10xtVZftIS17rxdaWraNpXE2gtpEW08vc&export=download&confirm=t" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-
-                        <!-- Subtle Film Grain Effect for Cinematic Texture -->
-                        <div class="film-grain" id="filmGrain"></div>
-                        
-                        <!-- Anti-Download Invisible Touch Overlay -->
-                        <div class="video-overlay" id="videoOverlay">
-                            <div class="overlay-lock-msg">
-                                <i data-lucide="shield-alert"></i>
-                                <span>Protected Media - Downloading is Disabled</span>
-                            </div>
-                        </div>
-
-                        <!-- Big Play/Pause Center Button -->
-                        <button class="center-play-btn" id="centerPlayBtn">
-                            <i data-lucide="play"></i>
-                        </button>
-
-                        <!-- 2. FALLBACK/DATA SAVER: Google Drive Preview Player Iframe -->
-                        <iframe id="mainVideoIframe" src="" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="display: none;"></iframe>
-                        
-                        <!-- Top-Right Shield for Iframe mode (Blocks Pop-out & Download buttons) -->
-                        <div class="iframe-shield-top-right" id="iframeShieldTopRight" style="display: none;"></div>
-
-                        <!-- DESKTOP ONLY: Custom Controls -->
-                        <div class="player-controls" id="playerControls">
-                            <!-- Progress Bar -->
-                            <div class="progress-container" id="progressContainer">
-                                <div class="progress-bar" id="progressBar"></div>
-                                <div class="progress-hover-bar"></div>
-                            </div>
-                            
-                            <div class="controls-row">
-                                <div class="controls-left">
-                                    <button class="control-btn" id="playPauseBtn" title="Play/Pause (Space)">
-                                        <i data-lucide="play"></i>
-                                    </button>
-                                    <button class="control-btn" id="stopBtn" title="Stop">
-                                        <i data-lucide="square"></i>
-                                    </button>
-                                    <div class="time-display">
-                                        <span id="currentTime">00:00</span> / <span id="totalDuration">00:00</span>
-                                    </div>
-                                </div>
-                                <div class="controls-right">
-                                    <!-- Player Mode Switcher -->
-                                    <button class="control-btn" id="playerModeBtn" title="Switch Player Mode" style="width: auto; gap: 4px; padding: 0 8px; border: 1px solid var(--text-secondary); border-radius: 4px; font-size: 0.75rem; color: var(--text-secondary); font-family: var(--font-heading); transition: all 0.2s;">
-                                        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> SWAP PLAYER
-                                    </button>
-                                    <!-- Cinema 4K Lens Filter Switcher -->
-                                    <button class="control-btn active" id="cinemaFilterBtn" title="Toggle Cinema 4K Filter" style="width: auto; gap: 4px; padding: 0 8px; border: 1px solid var(--accent-cyan); border-radius: 4px; font-size: 0.75rem; color: var(--accent-cyan);">
-                                        <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 4K LENS
-                                    </button>
-                                    <!-- Volume Slider -->
-                                    <div class="volume-container">
-                                        <button class="control-btn" id="muteBtn" title="Mute">
-                                            <i data-lucide="volume-2"></i>
-                                        </button>
-                                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="1">
-                                    </div>
-                                    <!-- Speed Selector -->
-                                    <div class="speed-selector-container">
-                                        <button class="control-btn" id="speedBtn" title="Playback Speed">
-                                            1.0x
-                                        </button>
-                                        <div class="speed-options" id="speedOptions">
-                                            <div class="speed-opt" data-speed="0.5">0.5x</div>
-                                            <div class="speed-opt" data-speed="0.75">0.75x</div>
-                                            <div class="speed-opt active" data-speed="1">1.0x</div>
-                                            <div class="speed-opt" data-speed="1.25">1.25x</div>
-                                            <div class="speed-opt" data-speed="1.5">1.5x</div>
-                                            <div class="speed-opt" data-speed="2">2.0x</div>
-                                        </div>
-                                    </div>
-                                    <button class="control-btn" id="fullscreenBtn" title="Fullscreen (F)">
-                                        <i data-lucide="maximize"></i>
-                                    </button>
-                                </div>
-                            </div>
+                        <!-- Overlay Lock Alert Popup -->
+                        <div class="overlay-lock-msg" id="overlayLockMsg" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); z-index: 20; display: none;">
+                            <i data-lucide="shield-alert"></i>
+                            <span>Protected Media - Downloading is Disabled</span>
                         </div>
                     </div>
                     
                     <div class="current-video-details">
                         <h3 id="currentVideoTitle" class="video-title-text">01-I Adore You Official Song.mp4</h3>
-                        <p class="video-desc-text" id="playerDescText">Securely streamed using custom media player.</p>
-                        <p class="player-tip-text" id="playerTipText" style="margin-top: 8px; font-size: 0.8rem; color: var(--accent-cyan); display: none; align-items: center; gap: 6px;">
-                            <i data-lucide="info" style="width: 14px; height: 14px; flex-shrink: 0;"></i>
-                            <span>Tip: Tapping video plays/pauses. Double-tap sides to seek. If loading stalls, tap <strong>SWAP PLAYER</strong>.</span>
-                        </p>
+                        <p class="video-desc-text" id="playerDescText">Securely streamed via Google Drive Media Player.</p>
                     </div>
                 </div>
 
@@ -331,7 +228,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=5"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();

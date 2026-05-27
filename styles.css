@@ -1174,5 +1174,17 @@ body {
     color: var(--text-secondary);
 }
 
+/* Default transparent shield over the Google Drive iframe top-right pop-out button */
+.iframe-shield-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 55px;
+    height: 50px;
+    z-index: 10;
+    background: transparent;
+    cursor: default;
+}
+
 
 
