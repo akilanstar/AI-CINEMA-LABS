@@ -1,7 +1,5 @@
 // DOM Elements
 const video = document.getElementById('mainVideo');
-const videoIframe = document.getElementById('mainVideoIframe');
-const iframeShield = document.getElementById('iframeShieldTopRight');
 const playerContainer = document.getElementById('videoPlayerContainer');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const centerPlayBtn = document.getElementById('centerPlayBtn');
@@ -22,20 +20,17 @@ const cinemaFilterBtn = document.getElementById('cinemaFilterBtn');
 const filmGrain = document.getElementById('filmGrain');
 const playerControls = document.getElementById('playerControls');
 const playerDescText = document.getElementById('playerDescText');
-const playerModeBtn = document.getElementById('playerModeBtn');
 const playerLoader = document.getElementById('playerLoader');
 const playerTipText = document.getElementById('playerTipText');
 const seekLeftFeedback = document.getElementById('seekLeftFeedback');
 const seekRightFeedback = document.getElementById('seekRightFeedback');
 const playerErrorOverlay = document.getElementById('playerErrorOverlay');
-const errorFallbackBtn = document.getElementById('errorFallbackBtn');
 
 // State Variables
 let isMuted = false;
 let lastVolume = 1;
 let controlsTimeout;
 let isMobile = false;
-let isIframeMode = false; // False = Custom HTML5 Video, True = Google Drive Iframe
 let currentFileId = "11D7i7oKexWVdOFh0lvr6ttfz5F5W8Ewt"; // Initial video ID
 let currentVideoName = "01-Stay Tonight Official Song.mp4";
 let lastTap = 0; // For double tap seek detection
@@ -55,98 +50,46 @@ function detectDevice() {
     updatePlayerModeUI();
 }
 
-// Update UI Layout based on Player Mode (HTML5 or Iframe)
+// Update UI Layout based on Player Mode
 function updatePlayerModeUI() {
     // Hide error overlay whenever we reset/update player mode
     if (playerErrorOverlay) {
         playerErrorOverlay.classList.remove('show');
     }
 
-    if (isIframeMode) {
-        console.log("Switching to Google Iframe Player (Data Saver Mode)");
-        
-        // Pause and hide HTML5 video
-        if (video) {
-            video.pause();
-            video.style.display = 'none';
+    console.log("Updating Custom HTML5 Player UI");
+    
+    // Show HTML5 Elements
+    if (video) {
+        video.style.display = 'block';
+        // Use local compressed video path
+        const expectedSrc = `videos/${currentVideoName}`;
+        if (!decodeURIComponent(video.src).endsWith(expectedSrc)) {
+            video.src = expectedSrc;
+            video.load();
         }
-        if (videoOverlay) videoOverlay.style.display = 'none';
-        if (centerPlayBtn) centerPlayBtn.style.display = 'none';
-        if (filmGrain) filmGrain.style.display = 'none';
-        
-        // Hide HTML5 specific controls
-        if (progressContainer) progressContainer.style.display = 'none';
-        if (playPauseBtn) playPauseBtn.style.display = 'none';
-        if (stopBtn) stopBtn.style.display = 'none';
-        if (currentTimeDisplay) currentTimeDisplay.parentElement.style.display = 'none';
-        if (speedBtn) speedBtn.style.display = 'none';
-        if (cinemaFilterBtn) cinemaFilterBtn.style.display = 'none';
-        
-        // Show Google Iframe Player
-        if (videoIframe) {
-            videoIframe.style.display = 'block';
-            const expectedSrc = `https://drive.google.com/file/d/${currentFileId}/preview`;
-            if (videoIframe.src !== expectedSrc) {
-                videoIframe.src = expectedSrc;
-                showLoader(2000); // Visual cue while iframe loads
-            }
-        }
-        if (iframeShield) iframeShield.style.display = 'block';
-        if (playerDescText) playerDescText.textContent = "Data Saver Mode: Streaming optimized for mobile networks.";
-        
-        if (playerModeBtn) {
-            playerModeBtn.innerHTML = '<i data-lucide="video" style="width: 14px; height: 14px;"></i> 4K PLAYER';
-            playerModeBtn.style.borderColor = 'var(--accent-cyan)';
-            playerModeBtn.style.color = 'var(--accent-cyan)';
-        }
-    } else {
-        console.log("Switching to Custom HTML5 Player (Original 4K Mode)");
-        
-        // Hide Google Iframe Player
-        if (videoIframe) {
-            videoIframe.style.display = 'none';
-            videoIframe.src = '';
-        }
-        if (iframeShield) iframeShield.style.display = 'none';
-        
-        // Show HTML5 Elements
-        if (video) {
-            video.style.display = 'block';
-            // Use local compressed video path
-            const expectedSrc = `videos/${currentVideoName}`;
-            if (!video.src.endsWith(expectedSrc)) {
-                video.src = expectedSrc;
-                video.load();
-            }
-        }
-        if (videoOverlay) videoOverlay.style.display = 'block';
-        if (centerPlayBtn) centerPlayBtn.style.display = 'flex';
-        if (filmGrain) filmGrain.style.display = 'block';
-        
-        // Show controls
-        if (progressContainer) progressContainer.style.display = 'block';
-        if (playPauseBtn) playPauseBtn.style.display = 'flex';
-        if (stopBtn) stopBtn.style.display = 'flex';
-        if (currentTimeDisplay) currentTimeDisplay.parentElement.style.display = 'block';
-        if (speedBtn) speedBtn.style.display = 'block';
-        if (cinemaFilterBtn) cinemaFilterBtn.style.display = 'flex';
-        
-        if (playerDescText) {
-            if (cinemaFilterBtn && cinemaFilterBtn.classList.contains('active')) {
-                playerDescText.textContent = "Original Quality: Secure 4K stream with Lens filter enabled.";
-            } else {
-                playerDescText.textContent = "Original Quality: Secure streaming with direct playback.";
-            }
-        }
-        
-        if (playerModeBtn) {
-            playerModeBtn.innerHTML = '<i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> SWAP PLAYER';
-            playerModeBtn.style.borderColor = 'var(--text-secondary)';
-            playerModeBtn.style.color = 'var(--text-secondary)';
-        }
-        
-        updatePlayIcons(video ? !video.paused : false);
     }
+    if (videoOverlay) videoOverlay.style.display = 'block';
+    if (centerPlayBtn) centerPlayBtn.style.display = 'flex';
+    if (filmGrain) filmGrain.style.display = 'block';
+    
+    // Show controls
+    if (progressContainer) progressContainer.style.display = 'block';
+    if (playPauseBtn) playPauseBtn.style.display = 'flex';
+    if (stopBtn) stopBtn.style.display = 'flex';
+    if (currentTimeDisplay) currentTimeDisplay.parentElement.style.display = 'block';
+    if (speedBtn) speedBtn.style.display = 'block';
+    if (cinemaFilterBtn) cinemaFilterBtn.style.display = 'flex';
+    
+    if (playerDescText) {
+        if (cinemaFilterBtn && cinemaFilterBtn.classList.contains('active')) {
+            playerDescText.textContent = "Original Quality: Secure 4K stream with Lens filter enabled.";
+        } else {
+            playerDescText.textContent = "Original Quality: Secure streaming with direct playback.";
+        }
+    }
+    
+    updatePlayIcons(video ? !video.paused : false);
     
     // Refresh Lucide Icons
     if (window.lucide) {
@@ -154,9 +97,8 @@ function updatePlayerModeUI() {
     }
 }
 
-// 2. Play / Pause Logic (HTML5 only)
+// 2. Play / Pause Logic
 function togglePlay() {
-    if (isIframeMode) return;
     if (video.paused) {
         video.play().then(() => {
             updatePlayIcons(true);
@@ -186,22 +128,20 @@ function updatePlayIcons(isPlaying) {
 }
 
 function stopVideo() {
-    if (isIframeMode) return;
     video.pause();
     video.currentTime = 0;
     updatePlayIcons(false);
 }
 
-// 3. Timeline Progress tracking (HTML5 only)
+// 3. Timeline Progress tracking
 function updateProgress() {
-    if (isIframeMode || isNaN(video.duration)) return;
+    if (isNaN(video.duration)) return;
     const progressPercent = (video.currentTime / video.duration) * 100;
     progressBar.style.width = `${progressPercent}%`;
     currentTimeDisplay.textContent = formatTime(video.currentTime);
 }
 
 function setProgress(e) {
-    if (isIframeMode) return;
     const width = progressContainer.clientWidth;
     const rect = progressContainer.getBoundingClientRect();
     const clickX = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
@@ -273,30 +213,50 @@ document.addEventListener('click', () => {
     if (speedOptions) speedOptions.classList.remove('show');
 });
 
-// 6. Fullscreen Handler
+// 6. Fullscreen Handler (Compatible with iOS and standard desktop/Android viewports)
 function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        playerContainer.requestFullscreen()
-            .then(() => {
-                fullscreenBtn.innerHTML = '<i data-lucide="minimize"></i>';
-                if (window.lucide) lucide.createIcons();
-            })
-            .catch(err => {
-                console.error("Fullscreen error:", err);
-            });
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+    
+    if (!isFullscreen) {
+        if (playerContainer.requestFullscreen) {
+            playerContainer.requestFullscreen()
+                .then(() => {
+                    fullscreenBtn.innerHTML = '<i data-lucide="minimize"></i>';
+                    if (window.lucide) lucide.createIcons();
+                })
+                .catch(err => {
+                    console.error("Fullscreen error:", err);
+                });
+        } else if (video.webkitEnterFullscreen) {
+            // iOS Safari native video fullscreen fallback
+            video.webkitEnterFullscreen();
+        } else if (playerContainer.webkitRequestFullscreen) {
+            // Webkit engine fallback
+            playerContainer.webkitRequestFullscreen();
+        }
     } else {
-        document.exitFullscreen();
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
         fullscreenBtn.innerHTML = '<i data-lucide="maximize"></i>';
         if (window.lucide) lucide.createIcons();
     }
 }
 
-document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
+const handleFullscreenChange = () => {
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+    if (!isFullscreen) {
         fullscreenBtn.innerHTML = '<i data-lucide="maximize"></i>';
-        if (window.lucide) lucide.createIcons();
+    } else {
+        fullscreenBtn.innerHTML = '<i data-lucide="minimize"></i>';
     }
-});
+    if (window.lucide) lucide.createIcons();
+};
+
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
 // 7. Cinema 4K Lens Filter Switcher
 if (cinemaFilterBtn) {
@@ -333,7 +293,7 @@ function hideLoader() {
     }
 }
 
-// 8. Playlist Navigation (Smart Hybrid implementation)
+// 8. Playlist Navigation
 function loadVideo(fileId, videoTitle) {
     currentFileId = fileId;
     currentVideoName = videoTitle;
@@ -344,36 +304,28 @@ function loadVideo(fileId, videoTitle) {
         playerErrorOverlay.classList.remove('show');
     }
 
-    if (isIframeMode) {
-        const newSrc = `https://drive.google.com/file/d/${fileId}/preview`;
-        videoIframe.src = newSrc;
-        showLoader(2000);
-    } else {
-        video.pause();
-        // Use local compressed video path
-        const newSrc = `videos/${videoTitle}`;
-        video.src = newSrc;
-        video.load();
-        
-        updatePlayIcons(false);
-        showLoader();
-        
-        video.play()
-            .then(() => {
-                updatePlayIcons(true);
-            })
-            .catch(err => {
-                console.log("Playback blocked or failed. Waiting for user action.", err);
-                updatePlayIcons(false);
-                hideLoader();
-            });
-    }
+    video.pause();
+    // Use local compressed video path
+    const newSrc = `videos/${videoTitle}`;
+    video.src = newSrc;
+    video.load();
+    
+    updatePlayIcons(false);
+    showLoader();
+    
+    video.play()
+        .then(() => {
+            updatePlayIcons(true);
+        })
+        .catch(err => {
+            console.log("Playback blocked or failed. Waiting for user action.", err);
+            updatePlayIcons(false);
+            hideLoader();
+        });
 }
 
 // 9. Touch Gesture Handlers (Tap to Play/Pause, Double-Tap to Seek)
 function handleVideoTap(e) {
-    if (isIframeMode) return;
-    
     const now = new Date().getTime();
     const timespan = now - lastTap;
     const doubleTapDelay = 300; // ms
@@ -471,8 +423,8 @@ document.addEventListener('keydown', (e) => {
         return false;
     }
     
-    // Keyboard controls for custom video player (when not in Iframe mode)
-    if (!isIframeMode && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    // Keyboard controls for custom video player
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
         if (e.key === ' ' || e.code === 'Space') {
             e.preventDefault();
             togglePlay();
@@ -496,9 +448,8 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// 11. Auto Hide Media Controls on Idle (Only in HTML5 mode)
+// 11. Auto Hide Media Controls on Idle
 function resetControlsTimer() {
-    if (isIframeMode) return;
     playerContainer.classList.remove('controls-hidden');
     clearTimeout(controlsTimeout);
     
@@ -584,24 +535,6 @@ if (playerContainer) {
     });
 }
 
-// Swap Player Button Action
-if (playerModeBtn) {
-    playerModeBtn.addEventListener('click', () => {
-        isIframeMode = !isIframeMode;
-        console.log("User toggled player mode manually. isIframeMode:", isIframeMode);
-        updatePlayerModeUI();
-    });
-}
-
-// Error Fallback button action
-if (errorFallbackBtn) {
-    errorFallbackBtn.addEventListener('click', () => {
-        isIframeMode = true;
-        console.log("User triggered backup fallback player after stream failure.");
-        updatePlayerModeUI();
-    });
-}
-
 // Playlist interaction
 playlistItems.forEach(item => {
     item.addEventListener('click', () => {
@@ -613,6 +546,47 @@ playlistItems.forEach(item => {
         loadVideo(fileId, name);
     });
 });
+
+// 12. Contact Form Submission Logic (Simulated with premium animations & feedback)
+const contactForm = document.getElementById('collaborationForm');
+const contactToast = document.getElementById('contactToast');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalBtnHTML = submitBtn.innerHTML;
+        
+        // Disable button & show loader state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<div class="spinner" style="width: 16px; height: 16px; border-width: 2px; margin-right: 8px; display: inline-block; border-color: rgba(255,255,255,0.1); border-top-color: var(--text-primary);"></div> Sending...';
+        
+        // Refresh icons if any loader styling changes
+        if (window.lucide) lucide.createIcons();
+        
+        // Simulate network delay
+        setTimeout(() => {
+            // Show toast notification
+            if (contactToast) {
+                contactToast.classList.add('show');
+                
+                // Hide toast after 4 seconds
+                setTimeout(() => {
+                    contactToast.classList.remove('show');
+                }, 4000);
+            }
+            
+            // Reset form fields
+            contactForm.reset();
+            
+            // Restore button state
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHTML;
+            if (window.lucide) lucide.createIcons();
+        }, 1200);
+    });
+}
 
 // Device detection & Initialization
 window.addEventListener('DOMContentLoaded', detectDevice);

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI Cinema Portfolio | High-Fidelity Showcases</title>
     <!-- Referrer Policy to bypass Google Drive referrer hotlink blocks on desktop -->
     <meta name="referrer" content="no-referrer">
@@ -92,10 +92,7 @@
                         <!-- Player Error Overlay (Visible only when stream fails) -->
                         <div class="player-error-overlay" id="playerErrorOverlay" style="display: none;">
                             <i data-lucide="alert-triangle"></i>
-                            <span class="error-msg-text">Failed to load high-quality stream.</span>
-                            <button class="btn btn-outline" id="errorFallbackBtn" style="padding: 8px 20px; font-size: 0.8rem; margin-top: 10px; border-color: var(--accent-cyan); color: var(--accent-cyan); font-family: var(--font-heading); width: auto; height: auto;">
-                                <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Switch to Backup Player
-                            </button>
+                            <span class="error-msg-text">Failed to load high-quality stream. Please check your network connection.</span>
                         </div>
 
                         <!-- 1. HTML5 Custom Player (Direct 4K Stream with Cinema Filters - Default on all devices) -->
@@ -120,12 +117,6 @@
                             <i data-lucide="play"></i>
                         </button>
 
-                        <!-- 2. FALLBACK/DATA SAVER: Google Drive Preview Player Iframe -->
-                        <iframe id="mainVideoIframe" src="" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="display: none;"></iframe>
-                        
-                        <!-- Top-Right Shield for Iframe mode (Blocks Pop-out & Download buttons) -->
-                        <div class="iframe-shield-top-right" id="iframeShieldTopRight" style="display: none;"></div>
-
                         <!-- DESKTOP ONLY: Custom Controls -->
                         <div class="player-controls" id="playerControls">
                             <!-- Progress Bar -->
@@ -147,10 +138,7 @@
                                     </div>
                                 </div>
                                 <div class="controls-right">
-                                    <!-- Player Mode Switcher -->
-                                    <button class="control-btn" id="playerModeBtn" title="Switch Player Mode" style="width: auto; gap: 4px; padding: 0 8px; border: 1px solid var(--text-secondary); border-radius: 4px; font-size: 0.75rem; color: var(--text-secondary); font-family: var(--font-heading); transition: all 0.2s;">
-                                        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> SWAP PLAYER
-                                    </button>
+
                                     <!-- Cinema 4K Lens Filter Switcher -->
                                     <button class="control-btn active" id="cinemaFilterBtn" title="Toggle Cinema 4K Filter" style="width: auto; gap: 4px; padding: 0 8px; border: 1px solid var(--accent-cyan); border-radius: 4px; font-size: 0.75rem; color: var(--accent-cyan);">
                                         <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 4K LENS
@@ -303,7 +291,18 @@
             </div>
 
             <div class="contact-container">
-                <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent successfully! (Demo)');">
+                <div class="contact-info-emails">
+                    <div class="email-item">
+                        <i data-lucide="mail"></i>
+                        <a href="mailto:akilanstar.n@gmail.com">akilanstar.n@gmail.com</a>
+                    </div>
+                    <div class="email-item">
+                        <i data-lucide="mail"></i>
+                        <a href="mailto:jagankumarvfx@gmail.com">jagankumarvfx@gmail.com</a>
+                    </div>
+                </div>
+                <div class="contact-divider"><span>OR SEND A MESSAGE</span></div>
+                <form class="contact-form" id="collaborationForm">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" required placeholder="Enter your name">
@@ -327,8 +326,18 @@
     <!-- Footer -->
     <footer class="footer-bottom">
         <p>&copy; 2026 AI Cinema Labs. All rights reserved.</p>
-        <p class="footer-note">Built with Antigravity AI pair programming.</p>
     </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="contactToast">
+        <div class="toast-content">
+            <i data-lucide="check-circle" class="toast-icon"></i>
+            <div class="toast-text">
+                <h4>Message Sent!</h4>
+                <p>Thank you for reaching out. We will get back to you soon.</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="script.js?v=3"></script>
