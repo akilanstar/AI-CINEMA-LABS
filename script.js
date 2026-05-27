@@ -36,8 +36,8 @@ let lastVolume = 1;
 let controlsTimeout;
 let isMobile = false;
 let isIframeMode = false; // False = Custom HTML5 Video, True = Google Drive Iframe
-let currentFileId = "10xtVZftIS17rxdaWraNpXE2gtpEW08vc"; // Initial video ID
-let currentVideoName = "01-I Adore You Official Song.mp4";
+let currentFileId = "11D7i7oKexWVdOFh0lvr6ttfz5F5W8Ewt"; // Initial video ID
+let currentVideoName = "01-Stay Tonight Official Song.mp4";
 let lastTap = 0; // For double tap seek detection
 
 // 1. Detect Device to adjust UI guides
