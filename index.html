@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons (via CDN) -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
     <!-- Background Glow Elements -->
@@ -99,7 +99,7 @@
                         </div>
 
                         <!-- 1. HTML5 Custom Player (Direct 4K Stream with Cinema Filters - Default on all devices) -->
-                        <video id="mainVideo" class="cinema-4k-filter" playsinline webkit-playsinline preload="metadata">
+                        <video id="mainVideo" class="cinema-4k-filter" playsinline webkit-playsinline preload="metadata" referrerpolicy="no-referrer">
                             <source src="https://drive.usercontent.google.com/download?id=10xtVZftIS17rxdaWraNpXE2gtpEW08vc&export=download&confirm=t" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -331,7 +331,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
