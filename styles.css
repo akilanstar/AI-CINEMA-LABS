@@ -866,24 +866,76 @@ body {
 @media (max-width: 1024px) {
     .showcase-grid {
         grid-template-columns: 1fr;
+        gap: 30px;
     }
     .playlist-container {
-        max-height: 400px;
+        max-height: 450px;
     }
 }
 
 @media (max-width: 768px) {
+    :root {
+        --header-height: 70px;
+    }
     .header {
         padding: 0 20px;
     }
     .nav {
-        display: none; /* Can be expanded to mobile menu later if needed */
+        display: none; /* Mobile menu hidden */
     }
     .hero {
-        padding-top: 120px;
+        padding-top: 100px;
+        min-height: 70vh;
+    }
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    .hero-description {
+        font-size: 1.05rem;
+        margin-bottom: 30px;
+    }
+    .showcase-section {
+        padding: 40px 20px;
+    }
+    .feature-card {
+        padding: 30px 20px;
     }
     .contact-container {
-        padding: 25px;
+        padding: 20px;
+        border-radius: 16px;
+    }
+    .iframe-shield-top {
+        height: 44px; /* Shorter header on tablets/large mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    .hero-description {
+        font-size: 0.95rem;
+    }
+    .section-title {
+        font-size: 1.8rem;
+    }
+    .playlist-container {
+        padding: 15px;
+        max-height: 380px;
+    }
+    .playlist-item {
+        padding: 10px;
+        gap: 10px;
+    }
+    .playlist-item-thumbnail {
+        width: 40px;
+        height: 40px;
+    }
+    .item-title {
+        font-size: 0.85rem;
+    }
+    .iframe-shield-top {
+        height: 36px; /* Very small overlay for mobile screens to keep center touch functional */
     }
 }
 
@@ -898,4 +950,5 @@ body {
     background: transparent;
     cursor: default;
 }
+
 
