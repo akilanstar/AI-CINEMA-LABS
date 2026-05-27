@@ -27,6 +27,8 @@ const playerLoader = document.getElementById('playerLoader');
 const playerTipText = document.getElementById('playerTipText');
 const seekLeftFeedback = document.getElementById('seekLeftFeedback');
 const seekRightFeedback = document.getElementById('seekRightFeedback');
+const playerErrorOverlay = document.getElementById('playerErrorOverlay');
+const errorFallbackBtn = document.getElementById('errorFallbackBtn');
 
 // State Variables
 let isMuted = false;
@@ -36,7 +38,6 @@ let isMobile = false;
 let isIframeMode = false; // False = Custom HTML5 Video, True = Google Drive Iframe
 let currentFileId = "10xtVZftIS17rxdaWraNpXE2gtpEW08vc"; // Initial video ID
 let currentVideoName = "01-I Adore You Official Song.mp4";
-let autoFallbackTimer = null;
 let lastTap = 0; // For double tap seek detection
 
 // 1. Detect Device to adjust UI guides
@@ -56,6 +57,11 @@ function detectDevice() {
 
 // Update UI Layout based on Player Mode (HTML5 or Iframe)
 function updatePlayerModeUI() {
+    // Hide error overlay whenever we reset/update player mode
+    if (playerErrorOverlay) {
+        playerErrorOverlay.classList.remove('show');
+    }
+
     if (isIframeMode) {
         console.log("Switching to Google Iframe Player (Data Saver Mode)");
         
@@ -82,7 +88,7 @@ function updatePlayerModeUI() {
             const expectedSrc = `https://drive.google.com/file/d/${currentFileId}/preview`;
             if (videoIframe.src !== expectedSrc) {
                 videoIframe.src = expectedSrc;
-                showLoader(2500); // Visual cue while iframe loads
+                showLoader(2000); // Visual cue while iframe loads
             }
         }
         if (iframeShield) iframeShield.style.display = 'block';
@@ -196,7 +202,6 @@ function updateProgress() {
 function setProgress(e) {
     if (isIframeMode) return;
     const width = progressContainer.clientWidth;
-    // Calculate click coordinates correctly for both desktop click and mobile touches
     const rect = progressContainer.getBoundingClientRect();
     const clickX = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
     const duration = video.duration;
@@ -320,28 +325,10 @@ function showLoader(duration = null) {
     }
 }
 
+// Ensure loader is hidden
 function hideLoader() {
     if (playerLoader) {
         playerLoader.classList.remove('show');
-    }
-}
-
-// Smart Fallback Timeout: If video doesn't play after 6s of loading, swap to Iframe
-function startFallbackTimer() {
-    clearFallbackTimer();
-    autoFallbackTimer = setTimeout(() => {
-        if (video && video.paused && video.currentTime === 0) {
-            console.warn("Direct stream load timeout - falling back to Iframe player...");
-            isIframeMode = true;
-            updatePlayerModeUI();
-        }
-    }, 6000); // 6s timeout
-}
-
-function clearFallbackTimer() {
-    if (autoFallbackTimer) {
-        clearTimeout(autoFallbackTimer);
-        autoFallbackTimer = null;
     }
 }
 
@@ -351,6 +338,11 @@ function loadVideo(fileId, videoTitle) {
     currentVideoName = videoTitle;
     currentVideoTitle.textContent = videoTitle;
     
+    // Hide error overlay
+    if (playerErrorOverlay) {
+        playerErrorOverlay.classList.remove('show');
+    }
+
     if (isIframeMode) {
         const newSrc = `https://drive.google.com/file/d/${fileId}/preview`;
         videoIframe.src = newSrc;
@@ -363,7 +355,6 @@ function loadVideo(fileId, videoTitle) {
         
         updatePlayIcons(false);
         showLoader();
-        startFallbackTimer();
         
         video.play()
             .then(() => {
@@ -423,6 +414,7 @@ function seekVideo(amount) {
     updateProgress();
 }
 
+// Seek overlay animations
 function showSeekFeedback(direction) {
     if (direction === 'left' && seekLeftFeedback) {
         seekLeftFeedback.classList.remove('show');
@@ -517,27 +509,23 @@ function resetControlsTimer() {
 
 // Media Event Bindings
 if (video) {
-    video.addEventListener('loadstart', () => {
-        showLoader();
-        startFallbackTimer();
-    });
+    video.addEventListener('loadstart', showLoader);
     video.addEventListener('waiting', showLoader);
     video.addEventListener('seeking', showLoader);
-    video.addEventListener('playing', () => {
-        hideLoader();
-        clearFallbackTimer();
-    });
+    video.addEventListener('playing', hideLoader);
     video.addEventListener('canplay', hideLoader);
     video.addEventListener('pause', hideLoader);
     video.addEventListener('timeupdate', updateProgress);
     video.addEventListener('loadedmetadata', () => {
         durationDisplay.textContent = formatTime(video.duration);
     });
+    // Video native loading/decoding errors trigger overlay
     video.addEventListener('error', (e) => {
-        console.error("HTML5 player error, switching to Fallback player:", e);
-        clearFallbackTimer();
-        isIframeMode = true;
-        updatePlayerModeUI();
+        console.error("HTML5 video error event:", video.error);
+        hideLoader();
+        if (playerErrorOverlay) {
+            playerErrorOverlay.classList.add('show');
+        }
     });
 }
 
@@ -555,7 +543,6 @@ if (stopBtn) stopBtn.addEventListener('click', stopVideo);
 if (progressContainer) {
     progressContainer.addEventListener('click', setProgress);
     
-    // Support dragging seeking on mobile/desktop
     let isDraggingProgress = false;
     const startDrag = (e) => {
         isDraggingProgress = true;
@@ -572,7 +559,6 @@ if (progressContainer) {
     window.addEventListener('mousemove', doDrag);
     window.addEventListener('mouseup', stopDrag);
     
-    // Touch versions
     progressContainer.addEventListener('touchstart', startDrag, { passive: true });
     window.addEventListener('touchmove', doDrag, { passive: true });
     window.addEventListener('touchend', stopDrag);
@@ -600,7 +586,16 @@ if (playerContainer) {
 if (playerModeBtn) {
     playerModeBtn.addEventListener('click', () => {
         isIframeMode = !isIframeMode;
-        console.log("User toggled player mode. isIframeMode:", isIframeMode);
+        console.log("User toggled player mode manually. isIframeMode:", isIframeMode);
+        updatePlayerModeUI();
+    });
+}
+
+// Error Fallback button action
+if (errorFallbackBtn) {
+    errorFallbackBtn.addEventListener('click', () => {
+        isIframeMode = true;
+        console.log("User triggered backup fallback player after stream failure.");
         updatePlayerModeUI();
     });
 }
@@ -626,5 +621,5 @@ if (video && video.readyState >= 1) {
     durationDisplay.textContent = formatTime(video.duration);
 }
 
-// Mobile compatibility touch event fixes
+// Disable double-click Zoom on iOS Safari/Chrome mobile viewport
 document.addEventListener('touchstart', function() {}, { passive: true });

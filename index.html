@@ -89,6 +89,15 @@
                             <span>+10s</span>
                         </div>
 
+                        <!-- Player Error Overlay (Visible only when stream fails) -->
+                        <div class="player-error-overlay" id="playerErrorOverlay" style="display: none;">
+                            <i data-lucide="alert-triangle"></i>
+                            <span class="error-msg-text">Failed to load high-quality stream.</span>
+                            <button class="btn btn-outline" id="errorFallbackBtn" style="padding: 8px 20px; font-size: 0.8rem; margin-top: 10px; border-color: var(--accent-cyan); color: var(--accent-cyan); font-family: var(--font-heading); width: auto; height: auto;">
+                                <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Switch to Backup Player
+                            </button>
+                        </div>
+
                         <!-- 1. HTML5 Custom Player (Direct 4K Stream with Cinema Filters - Default on all devices) -->
                         <video id="mainVideo" class="cinema-4k-filter" playsinline webkit-playsinline preload="metadata">
                             <source src="https://drive.usercontent.google.com/download?id=10xtVZftIS17rxdaWraNpXE2gtpEW08vc&export=download&confirm=t" type="video/mp4">

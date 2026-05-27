@@ -305,6 +305,7 @@ body {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 1px 1px var(--border-color);
+    touch-action: manipulation;
 }
 
 .custom-video-player video {
@@ -325,6 +326,7 @@ body {
     cursor: pointer;
     user-select: none;
     -webkit-user-drag: none;
+    touch-action: manipulation;
 }
 
 /* Overlay Lock Alert Popup */
@@ -425,6 +427,7 @@ body {
     margin-bottom: 12px;
     position: relative;
     transition: height 0.2s ease;
+    touch-action: manipulation;
 }
 
 .progress-container:hover {
@@ -882,6 +885,44 @@ body {
 
 .player-loader.show {
     display: flex;
+}
+
+/* Player Error Overlay */
+.player-error-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(3, 3, 5, 0.95);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    z-index: 19; /* Above loader */
+    backdrop-filter: blur(12px);
+    text-align: center;
+    padding: 20px;
+}
+
+.player-error-overlay.show {
+    display: flex;
+}
+
+.player-error-overlay i {
+    width: 48px;
+    height: 48px;
+    color: #ef4444;
+    filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.4));
+}
+
+.player-error-overlay .error-msg-text {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: var(--text-primary);
+    max-width: 80%;
+    margin-top: 5px;
 }
 
 .player-loader .spinner {
